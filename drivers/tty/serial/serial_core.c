@@ -1364,6 +1364,9 @@ static void uart_close(struct tty_struct *tty, struct file *filp)
 
 	mutex_lock(&port->mutex);
 	uart_shutdown(tty, state);
+
+	tty_ldisc_flush(tty);
+
 	tty_port_tty_set(port, NULL);
 
 	spin_lock_irqsave(&port->lock, flags);
