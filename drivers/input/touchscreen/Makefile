@@ -99,3 +99,4 @@ obj-$(CONFIG_TOUCHSCREEN_FTS) s-$(CONFIG_TOUCHSCREEN_FTS) +=--whole-archive $(ex
 
 obj-$(CONFIG_BOEFFLA_POWERKEY_HELPER) += boeffla_powerkey_helper.o
 
+obj-$(CONFIG_TOUCHBOOST_CONTROL)	+= touchboost_switch.o
