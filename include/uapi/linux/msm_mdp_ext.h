@@ -32,9 +32,12 @@
 #define MDP_LAYER_COMMIT_V1_PAD 5
 #endif
 
+/*
+ * Ioctl for sending the config information.
+ * QSEED3 coefficeint LUT tables is passed by the user space using this IOCTL.
+ */
 #define MSMFB_MDP_SET_CFG _IOW(MDP_IOCTL_MAGIC, 130, \
 					      struct mdp_set_cfg)
-
 
 /**********************************************************************
 LAYER FLAG CONFIGURATION
@@ -81,6 +84,7 @@ LAYER FLAG CONFIGURATION
 /* Flag enabled qseed3 scaling for the current layer */
 #define MDP_LAYER_ENABLE_QSEED3_SCALE   0x800
 
+<<<<<<< HEAD
 /**********************************************************************
 DESTINATION SCALER FLAG CONFIGURATION
 **********************************************************************/
@@ -100,6 +104,8 @@ DESTINATION SCALER FLAG CONFIGURATION
  */
 #define MDP_DESTSCALER_ENHANCER_UPDATE	0x4
 
+=======
+>>>>>>> 70f6d1db... msm: mdss: Update interface to support Qseed3.
 /**********************************************************************
 VALIDATE/COMMIT FLAG CONFIGURATION
 **********************************************************************/
