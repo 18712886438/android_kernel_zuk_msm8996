@@ -24,20 +24,20 @@
 					struct mdp_position_update)
 
 /*
- * To allow proper structure padding for 64bit/32bit target
- */
-#ifdef __LP64
-#define MDP_LAYER_COMMIT_V1_PAD 4
-#else
-#define MDP_LAYER_COMMIT_V1_PAD 5
-#endif
-
-/*
  * Ioctl for sending the config information.
  * QSEED3 coefficeint LUT tables is passed by the user space using this IOCTL.
  */
 #define MSMFB_MDP_SET_CFG _IOW(MDP_IOCTL_MAGIC, 130, \
 					      struct mdp_set_cfg)
+
+/*
+ * To allow proper structure padding for 64bit/32bit target
+ */
+#ifdef __LP64
+#define MDP_LAYER_COMMIT_V1_PAD 3
+#else
+#define MDP_LAYER_COMMIT_V1_PAD 4
+#endif
 
 /**********************************************************************
 LAYER FLAG CONFIGURATION
@@ -106,6 +106,25 @@ DESTINATION SCALER FLAG CONFIGURATION
 
 =======
 >>>>>>> 70f6d1db... msm: mdss: Update interface to support Qseed3.
+/**********************************************************************
+DESTINATION SCALER FLAG CONFIGURATION
+**********************************************************************/
+
+/* Enable/disable Destination scaler */
+#define MDP_DESTSCALER_ENABLE		0x1
+
+/*
+ * Indicating mdp_destination_scaler_data contains
+ * Scaling parameter update. Can be set anytime.
+ */
+#define MDP_DESTSCALER_SCALE_UPDATE	0x2
+
+/*
+ * Indicating mdp_destination_scaler_data contains
+ * Detail enhancement setting update. Can be set anytime.
+ */
+#define MDP_DESTSCALER_ENHANCER_UPDATE	0x4
+
 /**********************************************************************
 VALIDATE/COMMIT FLAG CONFIGURATION
 **********************************************************************/
@@ -442,6 +461,17 @@ struct mdp_layer_commit_v1 {
 
 	/* FRC info per device which contains frame count and timestamp */
 	struct mdp_frc_info __user *frc_info;
+	/*
+	 * Scaler data and control for setting up destination scaler.
+	 * A userspace pointer that points to a list of
+	 * struct mdp_destination_scaler_data.
+	 */
+	void __user		*dest_scaler;
+
+	/*
+	 * Represents number of Destination scaler data provied by userspace.
+	 */
+	uint32_t		dest_scaler_cnt;
 
 	/*
 	 * Scaler data and control for setting up destination scaler.
