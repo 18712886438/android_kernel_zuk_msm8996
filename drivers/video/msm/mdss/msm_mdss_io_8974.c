@@ -2142,6 +2142,7 @@ int mdss_dsi_post_clkon_cb(void *priv,
 
 	if (clk & MDSS_DSI_CORE_CLK) {
 		mmss_clamp = ctrl->mmss_clamp;
+
 		/*
 		 * controller setup is needed if coming out of idle
 		 * power collapse with clamps enabled.
