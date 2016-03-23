@@ -3726,13 +3726,13 @@ static int tasha_codec_enable_hphr_pa(struct snd_soc_dapm_widget *w,
 	dev_dbg(codec->dev, "%s %s %d\n", __func__, w->name, event);
 
 	switch (event) {
-	case SND_SOC_DAPM_PRE_PMU:
+    case SND_SOC_DAPM_PRE_PMU:
 		if ((!(strcmp(w->name, "ANC HPHR PA"))) &&
 		    (test_bit(HPH_PA_DELAY, &tasha->status_mask))) {
 			snd_soc_update_bits(codec, WCD9335_ANA_HPH, 0xC0, 0xC0);
 		}
-		set_bit(HPH_PA_DELAY, &tasha->status_mask);
-		break;
+    	set_bit(HPH_PA_DELAY, &tasha->status_mask);
+	break;
 	case SND_SOC_DAPM_POST_PMU:
 		if ((snd_soc_read(codec, WCD9335_ANA_HPH) & 0xC0) != 0xC0)
 			/* If PA_EN is not set (potentially in ANC case) then
