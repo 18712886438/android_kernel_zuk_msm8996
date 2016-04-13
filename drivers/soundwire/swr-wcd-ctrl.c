@@ -639,6 +639,7 @@ static struct swr_port_info *swrm_get_enabled_port(struct swr_master *master,
 	return port;
 }
 
+
 static bool swrm_remove_from_group(struct swr_master *master)
 {
 	struct swr_device *swr_dev;
@@ -799,8 +800,6 @@ static void swrm_apply_port_config(struct swr_master *master)
 {
 	u8 bank;
 	struct swr_mstr_ctrl *swrm = swr_get_ctrl_data(master);
-=======
-
 	if (!swrm) {
 		pr_err("%s: Invalid handle to swr controller\n",
 			__func__);
@@ -811,15 +810,6 @@ static void swrm_apply_port_config(struct swr_master *master)
 	dev_dbg(swrm->dev, "%s: enter bank: %d master_ports: %d\n",
 		__func__, bank, master->num_port);
 
-	/* set Row = 48 and col = 16 */
-	value = swrm->read(swrm->handle, SWRM_MCP_FRAME_CTRL_BANK_ADDR(bank));
-	value &= (~mask);
-	value |= ((0 << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
-		  (7 << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT) |
-		  (0 << SWRM_MCP_FRAME_CTRL_BANK_SSP_PERIOD_SHFT));
-	swrm->write(swrm->handle, SWRM_MCP_FRAME_CTRL_BANK_ADDR(bank), value);
-	dev_dbg(swrm->dev, "%s: regaddr: 0x%x, value: 0x%x\n", __func__,
-		SWRM_MCP_FRAME_CTRL_BANK_ADDR(bank), value);
 
 	swrm_cmd_fifo_wr_cmd(swrm, 0x01, 0xF, 0x00,
 			SWRS_SCP_HOST_CLK_DIV2_CTL_BANK(bank));
@@ -1254,6 +1244,7 @@ static int swrm_master_init(struct swr_mstr_ctrl *swrm)
 	u32 value[SWRM_MAX_INIT_REG];
 	int len = 0;
 
+	swrm->slvdev_dp_enable_cnt = 0;
 	/* Clear Rows and Cols */
 	val = ((row_ctrl << SWRM_MCP_FRAME_CTRL_BANK_ROW_CTRL_SHFT) |
 		(col_ctrl << SWRM_MCP_FRAME_CTRL_BANK_COL_CTRL_SHFT) |
