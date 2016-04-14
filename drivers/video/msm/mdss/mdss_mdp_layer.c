@@ -331,6 +331,28 @@ static int __layer_param_check(struct msm_fb_data_type *mfd,
 	return 0;
 }
 
+/* compare all reconfiguration parameter validation in this API */
+static int __validate_layer_reconfig(struct mdp_input_layer *layer,
+	struct mdss_mdp_pipe *pipe)
+{
+	int status = 0;
+	struct mdss_mdp_format_params *src_fmt;
+
+	/*
+	 * csc registers are not double buffered. It is not permitted
+	 * to change them on staged pipe with YUV layer.
+	 */
+	if (pipe->csc_coeff_set != layer->color_space) {
+		src_fmt = mdss_mdp_get_format_params(layer->buffer.format);
+		if (pipe->src_fmt->is_yuv && src_fmt && src_fmt->is_yuv) {
+			status = -EPERM;
+			pr_err("csc change is not permitted on used pipe\n");
+		}
+	}
+
+	return status;
+}
+
 static int __validate_single_layer(struct msm_fb_data_type *mfd,
 	struct mdp_input_layer *layer, u32 mixer_mux)
 {
