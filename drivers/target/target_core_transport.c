@@ -2431,12 +2431,12 @@ static void target_release_cmd_kref(struct kref *kref)
 	struct se_cmd *se_cmd = container_of(kref, struct se_cmd, cmd_kref);
 	struct se_session *se_sess = se_cmd->se_sess;
 
-	if (list_empty(&se_cmd->se_cmd_list)) {
-		spin_unlock(&se_sess->sess_cmd_lock);
-		se_cmd->se_tfo->release_cmd(se_cmd);
-		return;
-	}
-	if (se_sess->sess_tearing_down && se_cmd->cmd_wait_set) {
+	spin_lock(&se_cmd->t_state_lock);
+	fabric_stop = (se_cmd->transport_state & CMD_T_FABRIC_STOP);
+	spin_unlock(&se_cmd->t_state_lock);
+
+	if (se_cmd->cmd_wait_set || fabric_stop) {
+		list_del_init(&se_cmd->se_cmd_list);
 		spin_unlock(&se_sess->sess_cmd_lock);
 		complete(&se_cmd->cmd_wait_comp);
 		return;
