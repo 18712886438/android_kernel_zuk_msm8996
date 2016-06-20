@@ -1140,4 +1140,8 @@ config TOUCHSCREEN_MAXIM_STI
 
 source "drivers/input/touchscreen/gt9x_2.4/Kconfig"
 source "drivers/input/touchscreen/gt1151/Kconfig"
+
+config BOEFFLA_POWERKEY_HELPER
+	bool "Enable Boeffla Powerkey helper"
+	default n
 endif
