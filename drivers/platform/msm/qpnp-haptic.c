@@ -26,10 +26,6 @@
 #include <linux/qpnp/qpnp-haptic.h>
 #include "../../staging/android/timed_output.h"
 
-#ifdef CONFIG_PRODUCT_Z2_ROW
-#define DONT_USE_THIS_FOR_VIB
-#endif
-
 #define QPNP_IRQ_FLAGS	(IRQF_TRIGGER_RISING | \
 			IRQF_TRIGGER_FALLING | \
 			IRQF_ONESHOT)
@@ -157,8 +153,6 @@
 #define LRA_POS_FREQ_COUNT		6
 int lra_play_rate_code[LRA_POS_FREQ_COUNT];
 
-#ifndef DONT_USE_THIS_FOR_VIB 
-
 /* haptic debug register set */
 static u8 qpnp_hap_dbg_regs[] = {
 	0x0a, 0x0b, 0x0c, 0x46, 0x48, 0x4c, 0x4d, 0x4e, 0x4f, 0x51, 0x52, 0x53,
@@ -199,7 +193,6 @@ static u8 qpnp_hap_min_max_test_data[] = {
 	0x0, 0x7F, 0x0, 0xFF, 0x0, 0x7F, 0x0, 0xFF, 0x0, 0x7F, 0x0, 0xFF,
 	0x0, 0x7F, 0x0, 0xFF, 0x0, 0x7F, 0x0, 0xFF, 0x0, 0x7F, 0x0, 0xFF,
 };
-#endif
 
 /*
  * auto resonance mode
@@ -467,7 +460,6 @@ static int qpnp_hap_play(struct qpnp_hap *hap, int on)
 	return 0;
 }
 
-#ifndef DONT_USE_THIS_FOR_VIB 
 /* sysfs show debug registers */
 static ssize_t qpnp_hap_dump_regs_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -491,7 +483,6 @@ static ssize_t qpnp_hap_dump_regs_show(struct device *dev,
 
 	return count;
 }
-#endif
 
 /* play irq handler */
 static irqreturn_t qpnp_hap_play_irq(int irq, void *_hap)
@@ -857,7 +848,6 @@ static int qpnp_hap_parse_pwm_dt(struct qpnp_hap *hap)
 	return 0;
 }
 
-#ifndef DONT_USE_THIS_FOR_VIB 
 /* sysfs show for wave samples */
 static ssize_t qpnp_hap_wf_samp_show(struct device *dev, char *buf, int index)
 {
@@ -1299,6 +1289,44 @@ static ssize_t qpnp_hap_ramp_test_data_show(struct device *dev,
 
 }
 
+/* sysfs show for vmax_mv_strong update */
+static ssize_t qpnp_hap_vmax_mv_strong_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct timed_output_dev *timed_dev = dev_get_drvdata(dev);
+	struct qpnp_hap *hap = container_of(timed_dev, struct qpnp_hap,
+					 timed_dev);
+
+	return snprintf(buf, PAGE_SIZE, "%d\n", hap->vmax_mv);
+}
+
+/* sysfs store for vmax_mv_strong */
+static ssize_t qpnp_hap_vmax_mv_strong_store(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct timed_output_dev *timed_dev = dev_get_drvdata(dev);
+	struct qpnp_hap *hap = container_of(timed_dev, struct qpnp_hap,
+					 timed_dev);
+	u32 val;
+	ssize_t ret;
+
+	ret = kstrtou32(buf, 10, &val);
+	if (ret)
+		return ret;
+
+	if ((val < QPNP_HAP_VMAX_MIN_MV) || (val > QPNP_HAP_VMAX_MAX_MV))
+		return -EINVAL;
+
+	mutex_lock(&hap->wf_lock);
+	hap->vmax_mv = val;
+	ret = qpnp_hap_vmax_config(hap);
+	if (ret)
+		pr_err("%s: error setting vmax_mv\n", __func__);
+	mutex_unlock(&hap->wf_lock);
+
+	return count;
+}
+
 /* sysfs attributes */
 static struct device_attribute qpnp_hap_attrs[] = {
 	__ATTR(wf_s0, (S_IRUGO | S_IWUSR | S_IWGRP),
@@ -1346,8 +1374,10 @@ static struct device_attribute qpnp_hap_attrs[] = {
 	__ATTR(min_max_test, (S_IRUGO | S_IWUSR | S_IWGRP),
 			qpnp_hap_min_max_test_data_show,
 			qpnp_hap_min_max_test_data_store),
+	__ATTR(vmax_mv_strong, (S_IRUGO | S_IWUSR | S_IWGRP),
+			qpnp_hap_vmax_mv_strong_show,
+			qpnp_hap_vmax_mv_strong_store),
 };
-#endif
 
 static void calculate_lra_code(struct qpnp_hap *hap)
 {
@@ -2204,10 +2234,7 @@ static int qpnp_haptic_probe(struct spmi_device *spmi)
 	struct qpnp_hap *hap;
 	struct resource *hap_resource;
 	struct regulator *vcc_pon;
-	int rc;
-#ifndef DONT_USE_THIS_FOR_VIB
-	int i;
-#endif
+	int rc, i;
 
 	hap = devm_kzalloc(&spmi->dev, sizeof(*hap), GFP_KERNEL);
 	if (!hap)
@@ -2259,7 +2286,6 @@ static int qpnp_haptic_probe(struct spmi_device *spmi)
 		hap->auto_res_err_poll_timer.function = detect_auto_res_error;
 	}
 
-#ifndef DONT_USE_THIS_FOR_VIB
 	rc = timed_output_dev_register(&hap->timed_dev);
 	if (rc < 0) {
 		dev_err(&spmi->dev, "timed_output registration failed\n");
@@ -2274,7 +2300,6 @@ static int qpnp_haptic_probe(struct spmi_device *spmi)
 			goto sysfs_fail;
 		}
 	}
-#endif 
 
 	if (hap->manage_pon_supply) {
 		vcc_pon = regulator_get(&spmi->dev, "vcc_pon");
@@ -2292,13 +2317,11 @@ static int qpnp_haptic_probe(struct spmi_device *spmi)
 	return 0;
 
 sysfs_fail:
-#ifndef DONT_USE_THIS_FOR_VIB
 	for (i--; i >= 0; i--)
 		sysfs_remove_file(&hap->timed_dev.dev->kobj,
 				&qpnp_hap_attrs[i].attr);
 	timed_output_dev_unregister(&hap->timed_dev);
 timed_output_fail:
-#endif
 	cancel_work_sync(&hap->work);
 	if (hap->act_type == QPNP_HAP_LRA && hap->correct_lra_drive_freq)
 		hrtimer_cancel(&hap->auto_res_err_poll_timer);
@@ -2312,21 +2335,17 @@ timed_output_fail:
 static int qpnp_haptic_remove(struct spmi_device *spmi)
 {
 	struct qpnp_hap *hap = dev_get_drvdata(&spmi->dev);
-#ifndef DONT_USE_THIS_FOR_VIB 
 	int i;
 
 	for (i = 0; i < ARRAY_SIZE(qpnp_hap_attrs); i++)
 		sysfs_remove_file(&hap->timed_dev.dev->kobj,
 				&qpnp_hap_attrs[i].attr);
-#endif
 
 	cancel_work_sync(&hap->work);
 	if (hap->act_type == QPNP_HAP_LRA && hap->correct_lra_drive_freq)
 		hrtimer_cancel(&hap->auto_res_err_poll_timer);
 	hrtimer_cancel(&hap->hap_timer);
-#ifndef DONT_USE_THIS_FOR_VIB 
 	timed_output_dev_unregister(&hap->timed_dev);
-#endif
 	mutex_destroy(&hap->lock);
 	mutex_destroy(&hap->wf_lock);
 	if (hap->vcc_pon)
