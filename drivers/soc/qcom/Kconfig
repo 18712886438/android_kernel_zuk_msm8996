@@ -733,6 +733,12 @@ config MSM_KERNEL_PROTECT_TEST
           read-only.  This test is FATAL whether it passes or fails!
           Success is signaled by a stage-2 fault.
 
+config MMI_STORAGE_INFO
+	default n
+	bool "Motorola Mobility STORAGE Info"
+	help
+	Provide mechanism to export EMMC/UFS type, size and vendor info.
+
 source "drivers/soc/qcom/memshare/Kconfig"
 
 endif # ARCH_MSM
