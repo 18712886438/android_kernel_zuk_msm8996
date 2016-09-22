@@ -136,7 +136,7 @@ static int __init mmi_storage_info_init(void)
 		info->card_manufacturer,
 		info->product_name,
 		info->firmware_version);
-	pstore_annotate(apanic_annotation);
+	//pstore_annotate(apanic_annotation);
 
 	/* Export to sysfs*/
 	st_info_properties_kobj = kobject_create_and_add("storage", NULL);
