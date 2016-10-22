@@ -636,9 +636,9 @@ static void goodix_ts_work_func(struct work_struct *work)
                     GTP_INFO("Wakeup by gesture(^), light up the screen!");
                 }
                 doze_status = DOZE_WAKEUP;
-                input_report_key(ts->input_dev, KEY_POWER, 1);
+                input_report_key(ts->input_dev, KEY_WAKEUP, 1);
                 input_sync(ts->input_dev);
-                input_report_key(ts->input_dev, KEY_POWER, 0);
+                input_report_key(ts->input_dev, KEY_WAKEUP, 0);
                 input_sync(ts->input_dev);
                 // clear 0x814B
                 doze_buf[2] = 0x00;
