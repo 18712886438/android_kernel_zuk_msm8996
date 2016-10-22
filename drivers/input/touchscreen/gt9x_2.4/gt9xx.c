@@ -2439,6 +2439,18 @@ ERR_GET_VCC:
 	return ret;
 }
 #endif
+
+static ssize_t gtp_key_enable_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
+{
+	return 1;
+}
+static ssize_t gtp_key_enable_store(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	return 1;
+}
+
 /**************************************************
 	sys/devices/virtual/touch/tp_dev/
 ***************************************************/
@@ -2465,6 +2477,9 @@ static ssize_t gtp_gesture_wakeup_store(struct device *dev,
 }
 #endif
 static struct device_attribute attrs[] = {
+	__ATTR(key_enable, 0664,
+			gtp_key_enable_show,
+			gtp_key_enable_store),
 #if GTP_GESTURE_WAKEUP
         __ATTR(gesture_on, 0664,
                         gtp_gesture_wakeup_show,
