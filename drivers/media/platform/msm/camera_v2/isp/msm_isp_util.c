@@ -309,7 +309,7 @@ int msm_isp_get_clk_info(struct vfe_device *vfe_dev,
 void msm_isp_get_timestamp(struct msm_isp_timestamp *time_stamp)
 {
 	struct timespec ts;
-	get_monotonic_boottime(&ts);
+	ktime_get_ts(&ts);
 	time_stamp->buf_time.tv_sec    = ts.tv_sec;
 	time_stamp->buf_time.tv_usec   = ts.tv_nsec/1000;
 	do_gettimeofday(&(time_stamp->event_time));
@@ -2296,7 +2296,8 @@ void msm_isp_save_framedrop_values(struct vfe_device *vfe_dev,
 		stream_info =
 			&vfe_dev->axi_data.stream_info[j];
 		spin_lock_irqsave(&stream_info->lock, flags);
-		stream_info->prev_framedrop_period &= ~0x80000000;
+		stream_info->activated_framedrop_period  =
+			stream_info->requested_framedrop_period;
 		spin_unlock_irqrestore(&stream_info->lock, flags);
 	}
 }

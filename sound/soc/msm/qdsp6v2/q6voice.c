@@ -5948,10 +5948,19 @@ fail:
 	return ret;
 }
 
+#define SUPPORT_CALL_POWER_OP
+#ifdef SUPPORT_CALL_POWER_OP
+extern int g_call_status;
+#endif
 int voc_disable_device(uint32_t session_id)
 {
 	struct voice_data *v = voice_get_session(session_id);
 	int ret = 0;
+
+#ifdef SUPPORT_CALL_POWER_OP
+        g_call_status = 0;
+        pr_info("%s enter [ %d ]\n", __func__, g_call_status);
+#endif
 
 	if (v == NULL) {
 		pr_err("%s: v is NULL\n", __func__);
@@ -6119,6 +6128,9 @@ int voc_start_voice_call(uint32_t session_id)
 	struct voice_data *v = voice_get_session(session_id);
 	int ret = 0;
 
+#ifdef SUPPORT_CALL_POWER_OP
+        pr_info("%s enter [ %d ]\n", __func__, g_call_status);
+#endif
 	if (v == NULL) {
 		pr_err("%s: invalid session_id 0x%x\n", __func__, session_id);
 
@@ -6218,6 +6230,10 @@ int voc_start_voice_call(uint32_t session_id)
 	}
 fail:
 	mutex_unlock(&v->lock);
+#ifdef SUPPORT_CALL_POWER_OP
+	g_call_status = 1;
+        pr_info("%s exit [ %d ] [ %d ]\n", __func__, g_call_status, ret);
+#endif
 	return ret;
 }
 
