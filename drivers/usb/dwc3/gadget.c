@@ -2430,7 +2430,6 @@ static int __dwc3_cleanup_done_trbs(struct dwc3 *dwc, struct dwc3_ep *dep,
 	}
 
 <<<<<<< HEAD
-<<<<<<< HEAD
 	/*
 	 * We assume here we will always receive the entire data block
 	 * which we should receive. Meaning, if we program RX to
@@ -2442,9 +2441,6 @@ static int __dwc3_cleanup_done_trbs(struct dwc3 *dwc, struct dwc3_ep *dep,
 =======
 >>>>>>> 9bf46c6... usb: dwc3: gadget: increment request->actual once
 	if (s_pkt)
-=======
-	if (s_pkt && !chain)
->>>>>>> 1bc6efe0... usb: dwc3: gadget: always cleanup all TRBs
 		return 1;
 	if ((event->status & DEPEVT_STATUS_LST) &&
 			(trb->ctrl & (DWC3_TRB_CTRL_LST |
