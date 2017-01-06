@@ -189,13 +189,7 @@
 		qcom,eeprom-src = <&eeprom0>;
 		cam_vdig-supply = <&pm8994_s3>;
 		cam_vio-supply = <&pm8994_lvs1>;
-<<<<<<< HEAD
 		cam_vana-supply = <&pm8994_l29>;
-=======
-		cam_vana-supply = <&pm8994_l17>;
-		qcom,vdd-cx-supply = <&pm8994_s1_corner>;
-		qcom,vdd-cx-name = "qcom,vdd-cx";
->>>>>>> e8e5c35... msm: camera: sensor: Add cx supply in camera dtsi for msm8996
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana";
 		qcom,cam-vreg-min-voltage = <1300000 0 2800000>;
 		qcom,cam-vreg-max-voltage = <1300000 0 2800000>;
@@ -233,13 +227,7 @@
 //		qcom,eeprom-src = <&eeprom0>;
 		cam_vdig-supply = <&pm8994_l3>;
 		cam_vio-supply = <&pm8994_lvs1>;
-<<<<<<< HEAD
 		cam_vana-supply = <&pm8994_l29>;
-=======
-		cam_vana-supply = <&pm8994_l17>;
-		qcom,vdd-cx-supply = <&pm8994_s1_corner>;
-		qcom,vdd-cx-name = "qcom,vdd-cx";
->>>>>>> e8e5c35... msm: camera: sensor: Add cx supply in camera dtsi for msm8996
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana";
 		qcom,cam-vreg-min-voltage = <1000000 0 2800000>;
 		qcom,cam-vreg-max-voltage = <1000000 0 2800000>;
@@ -314,13 +302,7 @@
 		qcom,eeprom-src = <&eeprom1>;
 		cam_vdig-supply = <&pm8994_l27>;
 		cam_vio-supply = <&pm8994_lvs1>;
-<<<<<<< HEAD
 		cam_vana-supply = <&pm8994_l17>;
-=======
-		cam_vana-supply = <&pm8994_l29>;
-		qcom,vdd-cx-supply = <&pm8994_s1_corner>;
-		qcom,vdd-cx-name = "qcom,vdd-cx";
->>>>>>> e8e5c35... msm: camera: sensor: Add cx supply in camera dtsi for msm8996
 		qcom,cam-vreg-name = "cam_vdig", "cam_vio", "cam_vana";
 		qcom,cam-vreg-min-voltage = <1200000 0 2800000>;
 		qcom,cam-vreg-max-voltage = <1200000 0 2800000>;
