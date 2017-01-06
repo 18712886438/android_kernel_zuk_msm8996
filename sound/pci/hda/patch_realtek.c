@@ -5140,8 +5140,6 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
 	{.id = ALC292_FIXUP_TPT440_DOCK, .name = "tpt440-dock"},
 	{}
 };
-#define ALC225_STANDARD_PINS \
-	{0x21, 0x04211020}
 
 #define ALC255_STANDARD_PINS \
 	{0x18, 0x411111f0}, \
