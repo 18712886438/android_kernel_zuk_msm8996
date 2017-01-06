@@ -687,14 +687,12 @@ void add_dirty_dir_inode(struct inode *inode)
 	new->inode = inode;
 	INIT_LIST_HEAD(&new->list);
 
-	spin_lock(&sbi->inode_lock[type]);
-	if (type != FILE_INODE || test_opt(sbi, DATA_FLUSH))
-		__add_dirty_inode(inode, type);
-	inode_inc_dirty_pages(inode);
-	spin_unlock(&sbi->inode_lock[type]);
+	spin_lock(&sbi->dir_inode_lock);
+	ret = __add_dirty_inode(inode, new);
+	spin_unlock(&sbi->dir_inode_lock);
 
-	SetPagePrivate(page);
-	f2fs_trace_pid(page);
+	if (ret)
+		kmem_cache_free(inode_entry_slab, new);
 }
 
 void remove_dirty_dir_inode(struct inode *inode)
