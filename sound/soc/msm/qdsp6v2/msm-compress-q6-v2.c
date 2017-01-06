@@ -948,18 +948,10 @@ static int msm_compr_configure_dsp(struct snd_compr_stream *cstream)
 		return -EINVAL;
 	}
 
-	if ((prtd->codec_param.codec.format == SNDRV_PCM_FORMAT_S24_LE) ||
-		(prtd->codec_param.codec.format == SNDRV_PCM_FORMAT_S24_3LE))
+	if (prtd->codec_param.codec.format == SNDRV_PCM_FORMAT_S24_LE)
 		bits_per_sample = 24;
 	else if (prtd->codec_param.codec.format == SNDRV_PCM_FORMAT_S32_LE)
 		bits_per_sample = 32;
-
-    //use 24bits to get rid of 16bits innate noise
-    //mark by globale value to open adm 24bits
-    if (prtd->codec_param.codec.bit_rate == 24) {
-        bits_per_sample = 24;
-        gis_24bits = 1;
-    }
 
 	if (prtd->compr_passthr != LEGACY_PCM) {
 		ret = q6asm_open_write_compressed(ac, prtd->codec,

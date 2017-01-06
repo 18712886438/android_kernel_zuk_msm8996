@@ -26,7 +26,6 @@
 #include "msm-pcm-routing-v2.h"
 #include <sound/audio_cal_utils.h>
 #include <sound/adsp_err.h>
-#include <sound/sounddebug.h>
 #include <linux/qdsp6v2/apr_tal.h>
 
 #define WAKELOCK_TIMEOUT	5000
