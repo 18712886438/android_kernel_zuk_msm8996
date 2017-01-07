@@ -2441,7 +2441,7 @@ ERR_GET_VCC:
 #endif
 
 static ssize_t gtp_key_enable_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	return 1;
 }
