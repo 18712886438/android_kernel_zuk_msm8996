@@ -124,6 +124,7 @@ static char get_cacheflag(const struct kgsl_memdesc *m)
 	return table[kgsl_memdesc_get_cachemode(m)];
 }
 
+long long unsigned int graphic_memory = 0;
 
 static int print_mem_entry(int id, void *ptr, void *data)
 {
