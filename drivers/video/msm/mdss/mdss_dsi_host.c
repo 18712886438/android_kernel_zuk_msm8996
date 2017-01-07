@@ -1346,13 +1346,6 @@ static void mdss_dsi_mode_setup(struct mdss_panel_data *pdata)
 			MIPI_OUTP((ctrl_pdata->ctrl_base) + 0x2b4, data);
 		}
 
-		/* Enable frame transfer in burst mode */
-		if (ctrl_pdata->shared_data->hw_rev >= MDSS_DSI_HW_REV_103) {
-			data = MIPI_INP(ctrl_pdata->ctrl_base + 0x1b8);
-			data = data | BIT(16);
-			MIPI_OUTP((ctrl_pdata->ctrl_base + 0x1b8), data);
-			ctrl_pdata->burst_mode_enabled = 1;
-		}
 		mdss_dsi_set_burst_mode(ctrl_pdata);
 
 		/* DSI_COMMAND_MODE_MDP_STREAM_CTRL */
