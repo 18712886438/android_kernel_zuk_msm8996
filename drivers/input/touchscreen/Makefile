@@ -96,6 +96,3 @@ fts_ts-$(CONFIG_TOUCHSCREEN_FTS) += focaltech_core.o focaltech_ctl.o focaltech_e
 extlibs :=$(PWD)/drivers/input/touchscreen/ft_gesture_32bit_lib_v1.0_20140820.a 
 ldflagobj-$(CONFIG_TOUCHSCREEN_FTS) += fts_ts.o 
 obj-$(CONFIG_TOUCHSCREEN_FTS) s-$(CONFIG_TOUCHSCREEN_FTS) +=--whole-archive $(extlibs) --no-whole-archive
-
-obj-$(CONFIG_BOEFFLA_POWERKEY_HELPER) += boeffla_powerkey_helper.o
-
