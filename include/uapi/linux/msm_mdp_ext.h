@@ -35,14 +35,6 @@
 #define MSMFB_MDP_SET_CFG _IOW(MDP_IOCTL_MAGIC, 130, \
 					      struct mdp_set_cfg)
 
-/*
- * To allow proper structure padding for 64bit/32bit target
- */
-#ifdef __LP64
-#define MDP_LAYER_COMMIT_V1_PAD 3
-#else
-#define MDP_LAYER_COMMIT_V1_PAD 4
-#endif
 
 /**********************************************************************
 LAYER FLAG CONFIGURATION
